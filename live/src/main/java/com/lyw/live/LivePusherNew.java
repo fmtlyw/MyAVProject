@@ -1,7 +1,6 @@
 package com.lyw.live;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 /**
@@ -30,7 +29,8 @@ public class LivePusherNew {
         this.mAudioParam = mAudioParam;
         this.mActivity = mActivity;
         native_init();
-        mVideoStream = new VideoStream(this,mActivity,mVideoParam.getWidth(),mVideoParam.getHeight(),mVideoParam.getBitRate(),mVideoParam.getFrameRate(),mVideoParam.getCameraId());
+        mVideoStream = new VideoStream(this, mActivity, mVideoParam.getWidth(), mVideoParam.getHeight(), mVideoParam.getBitRate(), mVideoParam.getFrameRate(), mVideoParam.getCameraId());
+        mAudioStream = new AudioStream(this, mActivity, mAudioParam.getChannelConfig(), mAudioParam.getSampleRate(), mAudioParam.getAudioFormat(), mAudioParam.getNumChannels());
     }
 
     /**
@@ -48,6 +48,7 @@ public class LivePusherNew {
     public void startPush(String url) {
         native_start(url);
         mVideoStream.startLive();
+        mAudioStream.startLive();
     }
 
     /**
@@ -55,35 +56,46 @@ public class LivePusherNew {
      */
     public void stopPush() {
         mVideoStream.stopLive();
+        mAudioStream.stopLive();
         native_stop();
     }
 
     /**
      * 释放资源
      */
-    public void release(){
+    public void release() {
+        mAudioStream.release();
+        mVideoStream.release();
         native_release();
     }
 
-
-    public void switchCamera(){
-        mVideoStream.switchCarema();
+    public void setMute(boolean mute){
+        mAudioStream.setMute(mute);
     }
 
+    public void switchCamera() {
+        mVideoStream.switchCarema();
+    }
 
     public void pushVideo(byte[] data) {
         native_pushVideo(data);
     }
 
-    public void pushAudio(){
-
+    public void pushAudio(byte[] data) {
+        native_pushAudio(data);
     }
 
+    public int getInputSample() {
+        return getInputSamples();
+    }
 
-    public void setVideoCodecInfo(int width, int height, int fps, int bitrate){
+    public void setVideoCodecInfo(int width, int height, int fps, int bitrate) {
         native_setVideoCodecInfo(width, height, fps, bitrate);
     }
 
+    public void setAudioCodecInfo(int sampleRateInHz, int channels){
+        native_setAudioCodecInfo(sampleRateInHz,channels);
+    }
 
     /**
      * Callback this method, when native occurring error

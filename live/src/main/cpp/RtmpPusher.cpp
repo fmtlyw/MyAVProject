@@ -110,7 +110,7 @@ void *start(void *args) {
         //start pushing
         readyPushing = 1;
         packets.setWork(1);
-//        callback(audioStream->getAudioTag());
+        callback(audioStream->getAudioTag());
         RTMPPacket *packet = 0;
         while (readyPushing) {
             packets.pop(packet);
@@ -148,8 +148,8 @@ RTMP_PUSHER_FUNC(void, native_1init) {
     LOGI("native init...");
     videoStream = new VideoStream;
     videoStream->setVideoCallback(callback);
-//    audioStream = new AudioStream;
-//    audioStream->setAudioCallback(callback);
+    audioStream = new AudioStream;
+    audioStream->setAudioCallback(callback);
     packets.setReleaseCallback(releasePackets);
     jobject_error = env->NewGlobalRef(instance);
 }

@@ -59,4 +59,8 @@ public class VideoStream implements Camera.PreviewCallback, CameraHelper.OnChang
     public void startLive() {
         isLiving = true;
     }
+
+    public void release() {
+        mCameraHelper.release();
+    }
 }

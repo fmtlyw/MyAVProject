@@ -13,7 +13,7 @@ import com.lyw.live.VideoParam
 
 class MainActivity : BaseActivity(), CompoundButton.OnCheckedChangeListener {
 
-    private var textureView: SurfaceView? = null
+    private var surfaceView: SurfaceView? = null
     private var mLivePusher : LivePusherNew? = null
 
 
@@ -24,10 +24,8 @@ class MainActivity : BaseActivity(), CompoundButton.OnCheckedChangeListener {
         initPushNew()
     }
 
-
-
     private fun initView() {
-        textureView = findViewById<SurfaceView>(R.id.surface_camera)
+        surfaceView = findViewById<SurfaceView>(R.id.surface_camera)
 
         findViewById<View>(R.id.btn_swap).setOnClickListener {
             mLivePusher!!.switchCamera()
@@ -60,7 +58,7 @@ class MainActivity : BaseActivity(), CompoundButton.OnCheckedChangeListener {
 
 
         mLivePusher = LivePusherNew(this,videoParam,audioParam)
-        mLivePusher!!.setPreviewDisplay(textureView!!.holder)
+        mLivePusher!!.setPreviewDisplay(surfaceView!!.holder)
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
@@ -69,6 +67,7 @@ class MainActivity : BaseActivity(), CompoundButton.OnCheckedChangeListener {
                 mLivePusher!!.let {
                     if(isChecked) it.startPush(URL) else it.stopPush()
                 }
+            R.id.btn_mute->mLivePusher!!.setMute(isChecked)
         }
     }
 
